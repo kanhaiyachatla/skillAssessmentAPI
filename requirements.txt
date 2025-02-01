@@ -5,3 +5,4 @@ google-generativeai
 python-multipart
 docx2txt
 python-dotenv
+google-search-results
