@@ -6,7 +6,7 @@ from fastapi import FastAPI,Request,File,UploadFile,Form,Response
 
 from src.helper_function import return_exception,validate_input_resume,preprocess_text
 from src.fitz_text_extractor import extract_text
-from src.generative_llm import get_gemini_response
+from src.generative_llm import get_gemini_response,get_gemini_response_check_test
 from src.prompts import get_prompt_resume_summarizer,get_prompt_skill_test,get_prompt_test_results
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -76,7 +76,7 @@ class checkRequest(BaseModel):
 async def check_test(data: checkRequest):
     try:
         prompt= get_prompt_test_results()
-        genai_response = get_gemini_response(prompt+data.input_test+"\n"+data.profile_summary)
+        genai_response = get_gemini_response_check_test(prompt+data.input_test+"\n"+data.profile_summary)
         genai_response = genai_response.replace("```","")
         genai_response = genai_response.replace("JSON","")
         genai_response = genai_response.replace("json","")
