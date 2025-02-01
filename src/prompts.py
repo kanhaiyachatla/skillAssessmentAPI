@@ -60,7 +60,6 @@ Additionally, based on the test results and the candidate’s resume summary, id
 - **Career & Course Recommendations:**  
   - Suggest careers that align with **strong skills**.  
   - Recommend courses that help improve **weak skills** and **Recommended Career Paths**.  
-- **Output Format:**
 
 ### **Response Format (JSON Output)**  
 Ensure the response is **EXACTLY** in this format:  
