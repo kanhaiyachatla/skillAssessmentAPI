@@ -21,10 +21,26 @@ def configure():
         )
     
 
-def get_gemini_response(prompt):
+def get_gemini_response_check_test(prompt):
     try:
         configure()
         model = genai.GenerativeModel('gemini-1.5-pro')
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "statusCode": 404,
+                "errorCode": "GenAI Generation Failed.",
+                "message": "Something went wrong, please try again "+ str(e)
+            }
+        )
+
+def get_gemini_response(prompt):
+    try:
+        configure()
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
