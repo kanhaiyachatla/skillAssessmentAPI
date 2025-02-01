@@ -75,6 +75,9 @@ Ensure the response is **EXACTLY** in this format:
   "Recommended Courses": ["Course1", "Course2", ...]
 }
 
+Do not add any extra information, comments, or explanations.
+Ensure the JSON format remains clean, valid, and error-free.
+Output should strictly match the specified structure.
 """
 
 
