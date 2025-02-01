@@ -1,7 +1,7 @@
 import json
 import time
 from fastapi import FastAPI,Request,File,UploadFile,Form,Response
-
+from serpapi import GoogleSearch
 from src.helper_function import return_exception,validate_input_resume,preprocess_text
 from src.fitz_text_extractor import extract_text
 from src.generative_llm import get_gemini_response
@@ -70,3 +70,19 @@ async def check_test(input_test: str,profile_summary: str):
         return json_output
     except Exception as e:
         return_exception(e)
+
+@app.post("/jobs")
+async def get_jobs(job_title: str, location: str):
+    params = {
+        "engine": "google_jobs",
+        "q": job_title+" "+ location,
+        "hl": "en",
+        "api_key": "7eee66b39bc3a2fabedfc20c90fa9b891f360eb757a40ca5ed9d35390c3c1a6c"
+    }
+
+    search = GoogleSearch(params)
+    results = search.get_dict()
+
+    jobs_results = results.get("jobs_results", [])
+
+    return {"jobs": jobs_results}
