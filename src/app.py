@@ -6,8 +6,6 @@ from src.helper_function import return_exception,validate_input_resume,preproces
 from src.fitz_text_extractor import extract_text
 from src.generative_llm import get_gemini_response
 from src.prompts import get_prompt_resume_summarizer,get_prompt_skill_test,get_prompt_test_results
-from fastapi.middleware.cors import CORSMiddleware
-from src.helper_function import CORS_CONFIG
 
 app = FastAPI()
 
