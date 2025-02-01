@@ -3,3 +3,4 @@ uvicorn
 pyMuPDF
 google-generativeai
 python-multipart
+docx2txt
