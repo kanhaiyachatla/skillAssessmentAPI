@@ -1,12 +1,15 @@
 import json
-import time
-from fastapi import FastAPI,Request,File,UploadFile,Form,Response
 from serpapi import GoogleSearch
+import time
+from pydantic import BaseModel
+from fastapi import FastAPI,Request,File,UploadFile,Form,Response
+
 from src.helper_function import return_exception,validate_input_resume,preprocess_text
 from src.fitz_text_extractor import extract_text
 from src.generative_llm import get_gemini_response
 from src.prompts import get_prompt_resume_summarizer,get_prompt_skill_test,get_prompt_test_results
 from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -15,6 +18,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.get('/')
 @app.get("/health_check")
@@ -46,11 +50,15 @@ async def generate_summary(input_resume: UploadFile = File(...)):
     except Exception as e:
         return_exception(e)
 
+
+class SkillRequest(BaseModel):
+    input_skills: str
+
 @app.post("/generate_skill_test")
-async def generate_test(input_skills: str):
+async def generate_test(data: SkillRequest):
     try:
         prompt = get_prompt_skill_test()
-        genai_response = get_gemini_response(prompt+input_skills)
+        genai_response = get_gemini_response(prompt+data.input_skills)
         genai_response = genai_response.replace("```","")
         genai_response = genai_response.replace("JSON","")
         genai_response = genai_response.replace("json","")
@@ -60,12 +68,15 @@ async def generate_test(input_skills: str):
     except Exception as e:
         return_exception(e)
 
+class checkRequest(BaseModel):
+    input_test: str
+    profile_summary: str
 
 @app.post("/check_test")
-async def check_test(input_test: str,profile_summary: str):
+async def check_test(data: checkRequest):
     try:
         prompt= get_prompt_test_results()
-        genai_response = get_gemini_response(prompt+input_test+"\n"+profile_summary)
+        genai_response = get_gemini_response(prompt+data.input_test+"\n"+data.profile_summary)
         genai_response = genai_response.replace("```","")
         genai_response = genai_response.replace("JSON","")
         genai_response = genai_response.replace("json","")
@@ -75,11 +86,14 @@ async def check_test(input_test: str,profile_summary: str):
     except Exception as e:
         return_exception(e)
 
+class JobRequest(BaseModel):
+    job_title: str
+    location: str
 @app.post("/jobs")
-async def get_jobs(job_title: str, location: str):
+async def get_jobs(data: JobRequest):
     params = {
         "engine": "google_jobs",
-        "q": job_title+" "+ location,
+        "q": data.job_title+" "+ data.location,
         "hl": "en",
         "api_key": "7eee66b39bc3a2fabedfc20c90fa9b891f360eb757a40ca5ed9d35390c3c1a6c"
     }
