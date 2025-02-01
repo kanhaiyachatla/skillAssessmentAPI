@@ -24,7 +24,7 @@ def configure():
 def get_gemini_response_check_test(prompt):
     try:
         configure()
-        model = genai.GenerativeModel('gemini-1.5-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
